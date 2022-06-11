@@ -1,0 +1,51 @@
+package organisation
+
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
+
+type Identifiable interface {
+	ID() string
+}
+
+type Person struct {
+	firstName      string
+	lastName       string
+	twitterHandler string
+}
+
+func NewPerson(firstName string, lastName string) Person {
+	return Person{
+		firstName: firstName,
+		lastName:  lastName,
+	}
+}
+
+// Struct methods
+
+func (p *Person) FullName() string {
+	return fmt.Sprintf("%s %s", p.firstName, p.lastName)
+}
+
+func (p *Person) ID() string {
+	return "hello-world"
+}
+
+// Pointer-based receiver
+
+func (p *Person) SetTwitterHandler(handler string) error {
+	if len(handler) == 0 {
+		p.twitterHandler = handler
+	} else if !strings.HasPrefix(handler, "@") {
+		return errors.New("Twitter handler must start with an @ symbol")
+	}
+
+	p.twitterHandler = handler
+	return nil
+}
+
+func (p *Person) TwitterHandler() string {
+	return p.twitterHandler
+}
