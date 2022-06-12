@@ -18,4 +18,5 @@ func main() {
 	fmt.Println(p.ID())
 	fmt.Println(p.FullName())
 	fmt.Println(p.TwitterHandler())
+	fmt.Println(p.TwitterHandler().RediredctUrl())
 }

@@ -10,10 +10,12 @@ type Identifiable interface {
 	ID() string
 }
 
+type TwitterHandler string
+
 type Person struct {
 	firstName      string
 	lastName       string
-	twitterHandler string
+	twitterHandler TwitterHandler
 }
 
 func NewPerson(firstName string, lastName string) Person {
@@ -25,6 +27,11 @@ func NewPerson(firstName string, lastName string) Person {
 
 // Struct methods
 
+func (th TwitterHandler) RediredctUrl() string {
+	cleanHandler := strings.TrimPrefix(string(th), "@")
+	return fmt.Sprintf("https://www.twitter.com/%s", cleanHandler)
+}
+
 func (p *Person) FullName() string {
 	return fmt.Sprintf("%s %s", p.firstName, p.lastName)
 }
@@ -35,10 +42,10 @@ func (p *Person) ID() string {
 
 // Pointer-based receiver
 
-func (p *Person) SetTwitterHandler(handler string) error {
+func (p *Person) SetTwitterHandler(handler TwitterHandler) error {
 	if len(handler) == 0 {
 		p.twitterHandler = handler
-	} else if !strings.HasPrefix(handler, "@") {
+	} else if !strings.HasPrefix(string(handler), "@") {
 		return errors.New("Twitter handler must start with an @ symbol")
 	}
 
@@ -46,6 +53,6 @@ func (p *Person) SetTwitterHandler(handler string) error {
 	return nil
 }
 
-func (p *Person) TwitterHandler() string {
+func (p *Person) TwitterHandler() TwitterHandler {
 	return p.twitterHandler
 }
