@@ -11,17 +11,34 @@ type Identifiable interface {
 }
 
 type TwitterHandler string
+type SocialSecurityNumber string
 
-type Person struct {
-	firstName      string
-	lastName       string
-	twitterHandler TwitterHandler
+func (ssn SocialSecurityNumber) ID() string {
+	return string(ssn)
 }
 
-func NewPerson(firstName string, lastName string) Person {
+func NewSocialSecurityNumber(value string) Identifiable {
+	return SocialSecurityNumber(value)
+}
+
+type Name struct {
+	first string
+	last  string
+}
+
+type Person struct {
+	Name
+	twitterHandler TwitterHandler
+	Identifiable
+}
+
+func NewPerson(firstName string, lastName string, identifiable Identifiable) Person {
 	return Person{
-		firstName: firstName,
-		lastName:  lastName,
+		Name: Name{
+			first: firstName,
+			last:  lastName,
+		},
+		Identifiable: identifiable,
 	}
 }
 
@@ -33,12 +50,12 @@ func (th TwitterHandler) RediredctUrl() string {
 }
 
 func (p *Person) FullName() string {
-	return fmt.Sprintf("%s %s", p.firstName, p.lastName)
+	return fmt.Sprintf("%s %s", p.first, p.last)
 }
 
-func (p *Person) ID() string {
-	return "hello-world"
-}
+//func (p *Person) ID() string {
+//	return "hello-world"
+// }
 
 // Pointer-based receiver
 
